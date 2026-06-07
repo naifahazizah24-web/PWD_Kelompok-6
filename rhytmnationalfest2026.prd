@@ -1,0 +1,158 @@
+1. Project Overview
+
+Aplikasi Penjualan Tiket "RHYTHM NATION FESTIVAL 2026" adalah portal resmi yang berfungsi sebagai pusat manajemen transaksi dan pembelian tiket terintegrasi untuk festival musik skala besar tersebut. Web aplikasi ini dirancang secara khusus untuk memenuhi kebutuhan event management modern yang adaptif terhadap lonjakan lalu lintas data (high traffic) saat masa penjualan tiket dibuka (ticket war).  
+
+Selain memfasilitasi transaksi yang cepat dan aman, platform ini juga menyediakan sistem akun pengguna, dashboard profil, manajemen antrean real-time, penguncian kuota reservasi sementara, hingga penerbitan e-ticket dinamis untuk meminimalisasi praktik percaloan dan penipuan tiket duplikat di media sosial.  
+
+Goals
+- Optimalisasi Ticket War: Menghindari kegagalan server (crash/lag) saat fase penjualan tiket kuota tinggi dibuka melalui sistem antrean yang teratur.  
+- Keamanan Transaksi: Memberantas percaloan dan peredaran tiket palsu dengan memanfaatkan sistem enkripsi pada e-ticket.
+- Efisiensi Manajemen Stok: Menjamin transparansi ketersediaan kuota tiket melalui pembatasan waktu pembayaran yang ketat.  
+- Kemudahan Akses & Fleksibilitas: Menyediakan proses checkout dan pemantauan status transaksi yang mulus tanpa hambatan bagi pengguna, serta kemudahan proses pengembalian dana (refund).  
+
+Success Metrics
+- Server tetap berjalan stabil (0% database crash) meskipun diakses oleh ribuan pengguna secara bersamaan pada menit pertama ticket war.
+- Penurunan drastis atau hilangnya kasus tiket duplikat di venue karena setiap QR Code hanya dapat dipindai satu kali.
+- Tingkat konversi pemesanan yang tinggi dengan pemanfaatan kembali kuota tiket yang otomatis lepas dari transaksi yang hangus (booking lock timeout).
+- Pengguna mendapatkan kepastian estimasi waktu tunggu secara transparan saat berada di dalam ruang antrean.  
+
+
+2. User Personas
+1.) Person 1: Rian (22 tahun, Mahasiswa / FOMO Concert Goer) 
+Karakter: Sangat mengincar tiket Presale, kompetitif saat melakukan ticket war, dan sangat sensitif terhadap kecepatan pemuatan (loading speed) halaman web. 
+Kebutuhan: Memerlukan kejelasan informasi nomor antrean di waiting room serta transisi halaman yang instan tanpa perlu memuat ulang (reload) seluruh halaman saat berebut kuota.  
+2.) Person 2: Sarah (27 tahun, Pekerja Kantoran / Casual Viewer) 
+Karakter: Mengutamakan keamanan validasi transaksi, menyukai kepraktisan metode pembayaran instan (E-wallet/QRIS), dan menginginkan proses masuk ke venue yang antiribet.  
+Kebutuhan: Memerlukan petunjuk konfirmasi e-ticket yang jelas dan aman agar terhindar dari penipuan calo.  
+3.) Event Organizer / Admin (Technical & Operational Control)
+Karakter: Membutuhkan pengawasan penuh terhadap alur keluar-masuk dana transaksi, validasi tiket di lapangan, dan pemantauan performa server.  
+Kebutuhan:* Memerlukan sistem manajemen antrean (queue management) backend yang kuat serta pelacakan callback gateway pembayaran secara real-time.  
+
+3. Core Features
+1.) Real-Time Ticket Queue System (Waiting Room)
+Sistem penahanan lalu lintas pengguna ketika kuota kapasitas traffic penuh. Fitur ini menyaring akses pengguna sebelum menyentuh database utama demi menghindari sistem lumpuh.  
+Fitur:
+- Indikator nomor urut antrean digital.  
+- Estimasi waktu tunggu (countdown) yang diperbarui secara real-time.  
+
+2.) Temporary Ticket Reservation (Booking Lock System)
+Sistem penguncian inventaris tiket secara otomatis ketika pengguna berhasil mengamankan kategori pilihan dan melangkah ke halaman checkout.  
+Fitur:
+- Penghitung waktu mundur pembayaran selama 10 menit.
+- Otomatisasi pelepasan tiket kembali ke dalam kuota siap jual jika batas waktu pembayaran habis (expired).  
+
+3.) Ticket Purchasing & Transaction System
+Sistem transaksi terintegrasi yang memfasilitasi pengguna dari pemilihan kategori hingga proses pembayaran selesai menggunakan gerbang pembayaran eksternal.  
+Fitur:
+- Form pemilihan kategori tiket (VIP, Festival, CAT 1) dan kuantitasnya.
+- Integrasi Payment Gateway dengan dukungan metode pembayaran QRIS dan Virtual Account (VA).
+- Sistem Callback Handler otomatis dari gateway ke sistem backend untuk mengubah status pemesanan.  
+
+4.) Encrypted Dynamic E-Ticket Generator
+Penerbitan dokumen digital e-ticket setelah konfirmasi pembayaran berhasil diverifikasi oleh sistem backend.  
+Fitur:
+- Generation otomatis QR Code unik yang terenkripsi untuk tiap unit tiket.  
+- Sistem validasi satu kali pindai (single-scan system) di pintu masuk venue untuk mengubah status tiket menjadi "Used".  
+
+5.) User Authentication & Account System
+Sistem manajemen identitas terpusat bagi pembeli untuk mengamankan data transaksi personal dan kepemilikan tiket mereka.  
+Fitur:
+- Registrasi dan pembuatan akun baru pembeli.  
+- Login dan logout akun.  
+
+6.) User Dashboard ("My Tickets" Page)
+Halaman khusus pengguna untuk mengelola seluruh riwayat transaksi serta memantau status tiket yang telah sukses dibeli.  
+Fitur:
+- Dashboard riwayat booking beserta status pembayaran.  
+- Daftar kepemilikan unit tiket aktif lengkap dengan nomor seri dan tampilan QR Code terenkripsi.  
+
+7.) Integrated Refund Handling System
+Fasilitas penanganan administrasi pengembalian dana atau pembatalan transaksi secara teratur untuk memecahkan kendala birokrasi refund yang berbelit-belit.  
+Fitur:
+- Formulir pengajuan pembatalan pemesanan terdokumentasi.  
+- Pembaruan status persetujuan pengembalian dana pengguna.  
+
+8.) Admin Dashboard
+Pusat kendali operasional bagi event organizer untuk memantau data performa penjualan tiket.  
+Fitur:
+- Pengelolaan data akun pembeli (User management).  
+- Pemantauan alokasi sisa stok per kategori tiket.  
+- Rekapitulasi transaksi booking dan status pembayaran masuk. 
+- Kontrol validasi status tiket di lapangan saat hari H pelaksanaan acara.  
+
+4. Tech Stack
+- Backend
+Laravel 12: Digunakan sebagai fondasi utama sisi server. Arsitekturnya dimanfaatkan secara optimal untuk mengelola penjadwalan antrean yang ketat (Queue Management) demi mencegah beban berlebih database.  
+- Frontend
+Vue 3: Diimplementasikan sebagai Single Page Application (SPA) untuk menghasilkan transisi halaman dari waiting room, pengisian data, hingga proses checkout secara mulus tanpa interupsi muat ulang (reload page).  
+- Database
+MySQL: Bertanggung jawab penuh dalam mengamankan data transaksi finansial secara konsisten berkat kepatuhan penuh terhadap standarisasi properti ACID (Atomicity, Consistency, Isolation, Durability).  
+
+5. Data Models & Relations
+- User
+Menyimpan data identitas akun para pembeli tiket festival.  
+Fields:
+- id (Primary Key)
+- name
+- email
+- password
+
+Relations:
+- User hasMany Booking (Satu user dapat melakukan beberapa kali pemesanan).
+- TicketCategory
+Menyimpan spesifikasi pembagian kelas tiket yang tersedia beserta kapasitas batas atas ketersediaannya.  
+
+Fields:
+- id (Primary Key)
+- category_name (e.g., VIP, Festival, CAT 1) 
+- price
+- stock   
+
+Relations:
+- TicketCategory hasMany Ticket.  
+
+- Booking
+Mencatat rekaman induk dari setiap aktivitas transaksi pemesanan, kondisi pembayaran, dan kalkulasi biaya keseluruhan.  
+
+Fields:
+- id (Primary Key)
+- user_id (Foreign Key)
+- total_price 
+- payment_status (e.g., Pending, Success, Expired)   
+- created_at
+
+Relations:
+- Booking belongsTo User.  
+- Booking hasMany Ticket.  
+
+- Ticket
+Menyimpan entitas fisik per unit tiket individual yang diterbitkan dan menjadi hak milik pembeli setelah transaksi valid.  
+
+Fields:
+- id (Primary Key)
+- booking_id (Foreign Key)   
+- ticket_category_id (Foreign Key)   
+- serial_number   
+- qr_code (Terenkripsi)   
+- ticket_status (e.g., Active, Used)   
+
+Relations:
+- Ticket belongsTo TicketCategory.  
+- Ticket belongsTo Booking.  
+
+6. User Flows
+A. Flow Antrean & Pemilihan Tiket
+[User Masuk Web Aplikasi] → [Sistem Mengecek Kapasitas Traffic] → [User Ditahan di Waiting Room dengan Indikator Antrean (Jika Traffic Tinggi)] → [Dialihkan ke Halaman Kategori Tiket] → [User Memilih Kategori & Jumlah Tiket] → [Klik "Beli Sekarang"] → [Sistem Mengecek Sisa Stok & Mengunci Tiket].  
+
+
+B. Flow Transaksi & Pembayaran (Booking Lock)
+[Masuk Halaman Checkout] → [Sistem Memulai Timer Mundur 10 Menit] → [User Memilih Metode Pembayaran (QRIS / VA)] → [User Melakukan Pembayaran via Aplikasi Perbankan / E-Wallet] → [Laravel Menerima Callback dari Gateway Pembayaran] → [Sistem Mengubah Status Booking Menjadi "Success"].  
+
+
+C. Flow Penerbitan & Validasi E-Ticket
+[Status Booking Terbaca Sukses] → [Sistem Meng-generate QR Code Unik Terenkripsi secara Otomatis] → [Halaman "My Tickets" pada Vue 3 Terperbarui secara Real-Time] → [User Menunjukkan QR Code untuk Di-scan Petugas di Venue] → [Sistem Memvalidasi Keaslian Dokumen dan Mengubah Status Tiket Menjadi "Used"].  
+
+7. Out of Scope
+- Penyediaan fitur wadah jual-beli tiket kembali secara resmi (Official Resell Marketplace) internal di dalam website.
+- Sistem pemilihan nomor denah kursi secara mendetail (Sebab seluruh kategori tiket yang dipasarkan berbasis Freestanding atau Free Seating). 
+- Penyediaan manajemen kuesioner, survei kepuasan, maupun modul penjualan marchendise konser
