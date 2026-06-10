@@ -1,145 +1,221 @@
 <?php
 session_start();
 
-// Proteksi halaman: Jika user belum login, tendang ke halaman login
-if (!isset($_SESSION["user"])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['user'])) {
+    $_SESSION['user'] = "Angelica";
 }
 
-// Data Dummy Tiket untuk simulasi tampilan di HP (bisa dihubungkan ke database nanti)
-$myTickets = [
-    [
-        'id' => 'RN26-VIP-0982',
-        'name' => 'VIP Ticket',
-        'date' => '12 Desember 2026',
-        'holder' => $_SESSION["user"]
-    ],
-    [
-        'id' => 'RN26-FES-4412',
-        'name' => 'Festival Ticket',
-        'date' => '12 Desember 2026',
-        'holder' => $_SESSION["user"]
-    ]
-];
+$user = $_SESSION['user'];
+
+$totalTickets = 2;
+$queueNumber = 124;
+$paymentStatus = "Success";
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tickets - Rhythm Nation Festival 2026</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Desain khusus halaman tiket agar rapi saat dibuka di HP */
-        .tickets-container {
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-        }
-        .ticket-card-box {
-            background: white;
-            border: 2px dashed var(--red);
-            border-radius: 15px;
-            width: 100%;
-            max-width: 450px;
-            padding: 25px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-        }
-        .ticket-header {
-            border-bottom: 2px solid var(--cream);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .ticket-body p {
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        .qr-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            padding: 15px;
-            background: var(--cream);
-            border-radius: 10px;
-        }
-        .qr-code {
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard - Rhythm Nation Festival 2026</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:#f5f5f5;
+}
+
+nav{
+background:#b91c1c;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+gap:20px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+}
+
+.container{
+padding:30px;
+}
+
+.welcome-card{
+background:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.card h3{
+margin-bottom:10px;
+color:#b91c1c;
+}
+
+.number{
+font-size:35px;
+font-weight:bold;
+}
+
+.btn{
+display:inline-block;
+padding:12px 20px;
+background:#b91c1c;
+color:white;
+text-decoration:none;
+border-radius:8px;
+margin-top:15px;
+}
+
+.booking-table{
+width:100%;
+margin-top:25px;
+background:white;
+border-collapse:collapse;
+}
+
+.booking-table th,
+.booking-table td{
+padding:15px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.booking-table th{
+background:#b91c1c;
+color:white;
+}
+
+.status-success{
+color:green;
+font-weight:bold;
+}
+
+footer{
+text-align:center;
+padding:20px;
+margin-top:30px;
+}
+
+</style>
 </head>
+
 <body>
 
 <nav>
-    <div class="logo">RHYTHM NATION 2026</div>
-    <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="dashboard.php">Dashboard</a></li>
-        <li><a href="logout.php">Logout</a></li>
-    </ul>
+<div>
+🎵 RHYTHM NATION FESTIVAL 2026
+</div>
+
+<ul>
+<li><a href="dashboard.php">Dashboard</a></li>
+<li><a href="waiting-room.php">Waiting Room</a></li>
+<li><a href="mytickets.php">My Tickets</a></li>
+<li><a href="logout.php">Logout</a></li>
+</ul>
 </nav>
 
-<div class="tickets-container">
-    <h1 style="color: var(--red); text-align: center; font-size: 32px; font-family: 'Cinzel', serif;">🎫 Tiket Saya</h1>
-    <p style="text-align: center; margin-bottom: 20px;">Tunjukkan QR Code di bawah ini kepada petugas di gerbang masuk.</p>
+<div class="container">
 
-    <?php foreach ($myTickets as $ticket): ?>
-        <div class="ticket-card-box">
-            <div class="ticket-header">
-                <h2 style="color: var(--red); font-size: 22px; font-weight: bold;"><?php echo $ticket['name']; ?></h2>
-                <span style="font-size: 14px; color: #777;">Rhythm Nation Festival 2026</span>
-            </div>
-            
-            <div class="ticket-body">
-                <p><strong>Nama Pemilik:</strong> <?php echo $ticket['holder']; ?></p>
-                <p><strong>Tanggal Event:</strong> <?php echo $ticket['date']; ?></p>
-                <p><strong>Lokasi:</strong> Gelora Bung Karno, Jakarta</p>
-                <p><strong>Kode Unik:</strong> <span style="font-family: monospace; color: var(--red); font-weight: bold;"><?php echo $ticket['id']; ?></span></p>
-                
-                <div class="qr-area">
-                    <div class="qr-code" data-token="<?php echo $ticket['id']; ?>"></div>
-                    <span style="font-size: 12px; color: #555; margin-top: 8px;">Pindai Layar HP untuk Masuk</span>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
+<div class="welcome-card">
+<h1>Selamat Datang, <?php echo $user; ?> 👋</h1>
+<p>Kelola tiket dan transaksi festival Anda di sini.</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>Total Tiket</h3>
+<div class="number">
+<?php echo $totalTickets; ?>
+</div>
+</div>
+
+<div class="card">
+<h3>Nomor Antrean</h3>
+<div class="number">
+#<?php echo $queueNumber; ?>
+</div>
+</div>
+
+<div class="card">
+<h3>Status Pembayaran</h3>
+<div class="number" style="font-size:24px;">
+<?php echo $paymentStatus; ?>
+</div>
+</div>
+
+</div>
+
+<a href="waiting-room.php" class="btn">
+Masuk Waiting Room
+</a>
+
+<a href="mytickets.php" class="btn">
+Lihat Tiket Saya
+</a>
+
+<table class="booking-table">
+
+<tr>
+<th>ID Booking</th>
+<th>Kategori</th>
+<th>Jumlah</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>BK2026001</td>
+<td>VIP</td>
+<td>1</td>
+<td class="status-success">Success</td>
+</tr>
+
+<tr>
+<td>BK2026002</td>
+<td>Festival</td>
+<td>1</td>
+<td class="status-success">Success</td>
+</tr>
+
+</table>
+
 </div>
 
 <footer>
-    © 2026 Rhythm Nation Festival
+© 2026 Rhythm Nation Festival
 </footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Cari semua elemen HTML yang memiliki class 'qr-code'
-    const qrElements = document.querySelectorAll('.qr-code');
-    
-    qrElements.forEach(function(element) {
-        // Ambil string ID tiket dari atribut 'data-token'
-        const tokenData = element.getAttribute('data-token');
-        
-        // Buat QR Code secara instan di dalam elemen tersebut
-        new QRCode(element, {
-            text: tokenData,
-            width: 150,       // Ukuran lebar QR Code di HP
-            height: 150,      // Ukuran tinggi QR Code di HP
-            colorDark: "#222222",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.M
-        });
-    });
-});
-</script>
 
 </body>
 </html>
