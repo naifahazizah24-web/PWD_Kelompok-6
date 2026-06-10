@@ -1,12 +1,11 @@
-const db = require('./db'); // Asumsi koneksi database Anda
+const db = require('./db');
 
-// Mock Callback untuk mengubah status pembayaran
 const handlePaymentCallback = async (req, res) => {
     try {
         const { order_id, status_pembayaran } = req.body;
 
         if (status_pembayaran === 'success') {
-            // Update status transaksi di database menjadi success
+           
             await db.query(
                 "UPDATE transactions SET status = 'success' WHERE order_id = ?",
                 [order_id]
