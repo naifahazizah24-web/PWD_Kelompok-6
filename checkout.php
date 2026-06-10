@@ -1,18 +1,15 @@
 <?php
-// 1. Panggil config.php agar bisa mengakses data tiket kelompok ($ticketCategories)
+
 require_once 'config.php';
 
-// 2. Proteksi halaman: Jika user belum login, tendang ke halaman login
 if (!isLoggedIn()) {
     header("Location: login.php");
     exit();
 }
 
-// 3. Ambil data variasi tiket asli dari config.php untuk dimasukkan ke keranjang belanja (Simulasi)
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
     
-    // Kita masukkan ketiga kategori asli kelompokmu ke dalam session cart
     foreach ($ticketCategories as $category) {
         $_SESSION['cart'][] = [
             'id'    => $category['id'],
