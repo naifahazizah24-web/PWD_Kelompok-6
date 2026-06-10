@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Models;
+session_start();
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class Booking extends Model
+if(!isset($_SESSION["user"]))
 {
-    protected $fillable = ['user_id', 'total_price', 'payment_status'];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function tickets(): HasMany
-    {
-        return $this->hasMany(Ticket::class);
-    }
+    header("Location: login.php");
+    exit();
 }
+
+if(isset($_GET["ticket"]))
+{
+    $_SESSION["ticket"] = $_GET["ticket"];
+}
+
+$_SESSION["booking_time"] = time();
+
+$_SESSION["expired_at"] =
+time() + (10 * 60);
+
+header("Location: waiting_room.php");
+
+exit();
