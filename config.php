@@ -4,20 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/*
-|--------------------------------------------------------------------------
-| Konfigurasi Website
-|--------------------------------------------------------------------------
-*/
-
 define('NAMA_EVENT', 'Rhythm Nation Festival 2026');
 define('TAHUN_EVENT', '2026');
-
-/*
-|--------------------------------------------------------------------------
-| Ticket Categories
-|--------------------------------------------------------------------------
-*/
 
 $ticketCategories = [
 
@@ -44,12 +32,6 @@ $ticketCategories = [
 
 ];
 
-/*
-|--------------------------------------------------------------------------
-| Helper Functions
-|--------------------------------------------------------------------------
-*/
-
 function isLoggedIn(): bool
 {
     return isset($_SESSION['user']);
@@ -59,3 +41,17 @@ function getUserName(): string
 {
     return $_SESSION['user'] ?? 'Guest';
 }
+
+<?php
+
+function getUserName(): string
+{
+    return $_SESSION['user'] ?? 'Guest';
+}
+
+if (!class_exists('Redis')) {
+    die("Ekstensi Redis belum aktif di server PHP Anda.");
+}
+
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379); // Menghubungkan ke server memori Redis
