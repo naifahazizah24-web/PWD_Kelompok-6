@@ -1,8 +1,7 @@
 <?php
-// Memasukkan berkas config untuk memanfaatkan fungsi pembantu bawaan kelompok
+
 require_once 'config.php';
 
-// Proteksi halaman: Jika user belum login, dikembalikan ke halaman login
 if (!isLoggedIn()) {
     header("Location: login.php");
     exit();
@@ -41,6 +40,15 @@ if (!isLoggedIn()) {
 </div>
 <?php endif; ?>
 
+<?php if(isset($_SESSION['queue_error'])): ?>
+<div class="error-box" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #f5c6cb;">
+    <?php
+        echo $_SESSION['queue_error'];
+        unset($_SESSION['queue_error']);
+    ?>
+</div>
+<?php endif; ?>
+
 <div class="dashboard-container">
 
     <div class="welcome-card">
@@ -71,11 +79,11 @@ if (!isLoggedIn()) {
                     </button>
                 </a>
             <?php else: ?>
-                <a href="checkout.php" style="text-decoration: none;">
-                    <button style="background: var(--red); color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; width: 100%; font-family: Perpetua, serif; font-weight: bold;">
+                <form action="join-queue-action.php" method="POST" style="width: 100%;">
+                    <button type="submit" style="background: var(--red); color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; width: 100%; font-family: Perpetua, serif; font-weight: bold;">
                         Beli Tiket Sekarang
                     </button>
-                </a>
+                </form>
             <?php endif; ?>
         </div>
 
@@ -101,11 +109,11 @@ if (!isLoggedIn()) {
         <p>
             Experience The Biggest Music Festival In Indonesia
         </p>
-        <a href="checkout.php">
-            <button style="background: var(--red); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-size: 18px; cursor: pointer; font-weight: bold; margin-top: 15px;">
+        <form action="join-queue-action.php" method="POST">
+            <button type="submit" style="background: var(--red); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-size: 18px; cursor: pointer; font-weight: bold; margin-top: 15px;">
                 Mulai Pemesanan Tiket
-                </button>
-        </a>
+            </button>
+        </form>
     </div>
 
 </div>
