@@ -54,4 +54,4 @@ if (!class_exists('Redis')) {
 }
 
 $redis = new Redis();
-$redis->connect('127.0.0.1', 6379); // Menghubungkan ke server memori Redis
+$redis->connect('127.0.0.1', 6379);
